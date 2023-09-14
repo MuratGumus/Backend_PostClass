@@ -94,6 +94,7 @@ console.log( Car.arrowFunc() )
 
 /* ------------------------------------------------------- *
 //? ARRAY DESTRUCTURING
+// * Array destructuring yaparken sıralama önemlidir. Her şey indis sırasına göre yapılır.
 
 const testArray = [ 'value0', 'value1', 'value2', 'value3' ]
 
@@ -118,8 +119,9 @@ console.log( newArr2  == testArray) // False.
 console.log( newArr3  == testArray) // False. Heap-Stack olayından dolayı içeriği aynı olsa da farklı yerlerde saklandığı için farklıdır.
 console.log( newArr4  == testArray) // True. Shallow copy olduğu için aynı yerde saklanır. Bu nedenle aynıdır.
 
-/* ------------------------------------------------------- */
+/* ------------------------------------------------------- *
 //? OBJECT DESTRUCTURING
+// * Object destructuring yaparken indisin hiçbir önemi yoktur. Tamamen key-property-key eşleşmelerine göre yapılır. İstenilen sırada yapılabilir.
 
 const Car = {
     brand: "Ford",
@@ -153,7 +155,11 @@ const newObj = {
 };
 console.log(newObj);
 
-// Object to JSON:
+/* ------------------------------------------------------- *
+// ? VERİ TİPİ DÖNÜŞTÜRME
+// * JSON veri tipi sadece string barındırabilir. Object veri tipi ise içerisinde tüm veri tiplerini barındırabilir. Eğer JSON formatına dönüştürelen objenin içerisinde stringe çevrilemeyen array gibi ögeler varsa bunlar doğrudan dışlanır ve çevrilmez. Object'ten JSON'a dönüştürülen veri tekrar Object'e çevrilse de bu dışlanan ve çevrilemeyen öğeler geri gelmez. 
+
+// Object to JSON: // String olarak dönüştürür
 const json = JSON.stringify(Car);
 console.log(typeof json, json);
 
@@ -172,7 +178,7 @@ console.log(arr3);
 
 /* -------------------------------------------------------
     Object Constructor
-------------------------------------------------------- */
+------------------------------------------------------- *
 
 const PascalCaseNamed = function () {
     this.property = "value";
@@ -180,6 +186,7 @@ const PascalCaseNamed = function () {
 
 /* ------------------------------------------------------- */
 //? "NEW" KEYWORD
+//* this.brand olarak yazılan brand property iken this brand'e ataması yapılan brand ve üst satırında function içerisinde yazılan brand ise parametredir.
 
 // const CarConstructor = function (brand, model, year = 2011) {
 
