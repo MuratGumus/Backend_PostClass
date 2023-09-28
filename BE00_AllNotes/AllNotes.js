@@ -1429,11 +1429,450 @@ SELECT COUNT(*) AS kayitSayisi, Country FROM Customer GROUP BY Country;
 //?
 //*
 
-// TODO *****************   LESSON 8*****************
+// TODO *****************   LESSON 8 - MongoDB  *****************
+/* MongoSH */
+// https://www.mongodb.com/developer/products/mongodb/cheat-sheet/
+// https://www.mongodb.com/docs/manual/reference/sql-comparison/
+// https://www.w3schools.com/mongodb/index.php
 
-// TODO *****************   LESSON 9*****************
+/* General */
+// help
+help; // Yardım sekmesi açılır
+// clearScreen:
+cls; // $ console.clear() // ekranı temizler
 
-// TODO *****************   LESSON 10*****************
+mongosh; // terminalde js alanında mongodb alanına geçmemizi sağlar
+
+// exit from mongosh: // terminalde mongodb alanından js alanına dönmemizi sağlar
+exit; // $ exit() // $ .exit
+quit; // $ quit()
+
+/* Databases */
+show("dbs"); // $ show dbs // $ show databases // Bağlı olduğumuz veri tabanı sistemindeki veri tabanlarını gösterir
+// Create/Swicth to Database:
+use("newdb"); // $ use newdb  // farklı bir veritabanı olan newdb veri tabanına geçiş yapmamızı sağlar. artık newdb veritabanında çalışırız.
+// Drop/Reset:
+db.dropDatabase(); // database'i silmemizi sağlar
+
+/* Collections (Tables) */
+// mongodb.com/docs/manual/reference/method/js-collection/
+show("collections"); // $ show collections // $ show tables
+db.getCollectionNames(); // List  // Collection'ların isimlerini gösterir.
+db.getCollectionInfos(); // List  // Collection'ların detaylarını gösterir
+db.createCollection("collName"); // Create // Collection oluşturmamızı sağlar
+db.collName.renameCollection("collName2"); // Update  // Collenction'ın ismini değiştirmemizi sağlar
+db.collName2.drop(); // Drop  // Collection'ı silmemizi sağlar
+
+/* Documents (Records/Rows) */
+
+// CRUD İŞLEMLERİ
+// Tekil işlem yapacaksak işlemin yanına one, birden fazlaya işlem yapacaksak işlemin yanına many yazacağız.
+
+// INSERT: SQL' deki insert (create) komutuna karşılık olarak insertone veya insertmany kullanılır
+// db.coll.insertOne( { new_values } )
+// db.coll.insertMany( [ { new_values } ] )
+db.coll.insertOne({ firstName: "Test", lastName: "Test", age: 10 }); // Tekli ekleme
+db.coll.insertMany([
+    // in array[]   // Çoklu kayıt göndermemizi sağlar. Array içerisinde göndermemiz gerekir.
+    { firstName: "Test1", lastName: "Test1", age: 11 },
+    { firstName: "Test2", lastName: "Test2", age: 12 },
+    { firstName: "Test3", lastName: "Test3", age: 13 },
+    { firstName: "Test4", lastName: "Test4", age: 14 },
+    { firstName: "Test5", lastName: "Test5", age: 15 },
+    { firstName: "Test6", lastName: "Test6", age: 16 },
+    { firstName: "Test7", lastName: "Test7", age: 17 },
+    { firstName: "Test8", lastName: "Test8", age: 18 },
+    { firstName: "Test9", lastName: "Test9", age: 19 },
+    { firstName: "Test", lastName: "Test", age: 10 },
+    { firstName: "Test1", lastName: "Test1", age: 11 },
+    { firstName: "Test2", lastName: "Test2", age: 12 },
+    { firstName: "Test3", lastName: "Test3", age: 13 },
+    { firstName: "Test4", lastName: "Test4", age: 14 },
+    { firstName: "Test5", lastName: "Test5", age: 15 },
+    { firstName: "Test6", lastName: "Test6", age: 16 },
+    { firstName: "Test7", lastName: "Test7", age: 17 },
+    { firstName: "Test8", lastName: "Test8", age: 18 },
+    { firstName: "Test9", lastName: "Test9", age: 19 },
+    { firstName: "Test", lastName: "Test", age: 10 },
+    { firstName: "Test1", lastName: "Test1", age: 11 },
+    { firstName: "Test2", lastName: "Test2", age: 12 },
+    { firstName: "Test3", lastName: "Test3", age: 13 },
+    { firstName: "Test4", lastName: "Test4", age: 14 },
+    { firstName: "Test5", lastName: "Test5", age: 15 },
+    { firstName: "Test6", lastName: "Test6", age: 16 },
+    { firstName: "Test7", lastName: "Test7", age: 17 },
+    { firstName: "Test8", lastName: "Test8", age: 18 },
+    { firstName: "Test9", lastName: "Test9", age: 19 },
+]);
+// db.coll.insert() method is depracated.
+
+/* SELECT */ //SQL'deki select (read) yerin findone veya find kullanılır
+// db.coll.findOne( { filters }, { fields } )  // Tekli işlem için kullanılır. Bulduğu ilk şeyi döndürür.
+// db.coll.find( { filters }, { fields } )  // Çoklu işlem için kullanılır
+db.coll.findOne();
+db.coll.findOne({ firstName: "Test" });
+db.coll.find();
+db.coll.find({ firstName: "Test" });
+db.coll.find(
+    {
+        /* all */
+    },
+    { _id: false, firstName: true, lastName: true }
+); // Select Fields
+db.coll.distinct("firstName"); // Aynı kayıtların sadece bir kez getirilmesini sağlar. Tekrar edenler sadece 1 defa gösterilir.
+// Comparison:
+// Mongodb komutlarının başına $ eklenir.
+db.coll.find({ age: { $exists: true } }); // if exists
+db.coll.find({ age: { $eq: 15 } }); // == : equal
+db.coll.find({ age: { $ne: 15 } }); // <> : not equal
+db.coll.find({ age: { $gt: 15 } }); // > : greather than
+db.coll.find({ age: { $gte: 15 } }); // >= : greather than equal
+db.coll.find({ age: { $lt: 15 } }); // <= : less than equal
+db.coll.find({ age: { $lte: 15 } }); // <= : less than equal
+db.coll.find({ age: { $in: [10, 11, 12] } }); // in list
+db.coll.find({ age: { $nin: [10, 11, 12] } }); // not in list
+// Regex: Yazının herhangi bir yerinde belirtilen metin varsa döndürür
+// mongodb.com/docs/manual/reference/operator/query/regex/
+db.coll.find({ firstName: { $regex: "Test" } }); // Contains 'Test' // Bu yazım ile alttaki yazım aynı sonucu döndürür
+db.coll.find({ firstName: /Test/ }); // Contains 'Test'  // Bu yazım ile yukarıdaki yazım aynı sonucu döndürür
+db.coll.find({ firstName: /test/i }); // Case-InSensitive  // büyük küçük harf hassasiyetini kaldırır
+db.coll.find({ firstName: /^Test/ }); // StartsWith 'Test'  // Test ile başlama şartı ekler
+db.coll.find({ firstName: /Test$/ }); // EndsWith 'Test' // Test ile bitme şartı ekler
+// Logical:
+db.coll.find({ age: { $not: { $eq: 15 } } }); // NOT {EQUAL}  // 15'e eşit olmayanları döndürür
+db.coll.find({ firstName: "Test6", age: 16 }); // default: AND
+db.coll.find({ $and: [{ firstName: "Test6" }, { age: 16 }] }); // AND  // Her iki şartı sağlayanı döndürür
+db.coll.find({ $or: [{ firstName: "Test6" }, { age: 15 }] }); // OR  // İki şarttan birini sağlayanı döndürür
+db.coll.find({ $nor: [{ firstName: "Test6" }, { age: 15 }] }); // NOT OR  //İki şartı da sağlamayanı döndürür
+// Limit:
+db.coll.find().limit(5); // İlk 5 kaydı döndürür
+db.coll.find().skip(5).limit(5); // İlk 5 kaydı atla sonraki 5 kaydı döndürür
+// Sort (1:ASC, -1:DESC):  // Normal sıralama için 1, tersten sıralama için -1 kullanırız
+db.coll.find().sort({ age: -1 }).limit(5); //
+// Count:  // kayıt sayısını belirtiriz
+db.coll.find().count();
+db.coll.countDocuments(); // ShortHand find().count()
+db.coll.countDocuments({ firstName: "Test" });
+db.coll.estimatedDocumentCount(); // for bigData
+// db.coll.count() method is depracated.
+
+// UPDATE:  // Kaydı güncellemek için kullanılır
+//  Set ile varsa kayıt güncellenir yoksa kayıt eklenir
+// db.coll.updateOne( { filters }, { $set: { new_values } } )
+// db.coll.updateMany( { filters }, { $set: { new_values } } )
+db.coll.updateOne({ age: 19 }, { $set: { new_fields: "new_value" } }); // Add/Update field
+db.coll.updateOne({ age: 19 }, { $set: { new_fields: "new_value2" } }); // Add/Update field
+db.coll.updateMany({ age: 19 }, { $set: { new_fields: "new_value3" } }); // Add/Update field
+db.coll.updateMany(
+    {
+        /* all */
+    },
+    { $unset: { new_fields: 0 } }
+); // Drop field  // new_fields'i siler
+db.coll.updateMany(
+    {
+        /* all */
+    },
+    { $currentDate: { updated_at: true } }
+); // set currentDate to field
+db.coll.updateMany(
+    {
+        /* all */
+    },
+    { $inc: { age: 2 } }
+); // increment (age+2) field
+db.coll.updateMany(
+    {
+        /* all */
+    },
+    { $rename: { updated_at: "updated" } }
+); // rename field
+// db.coll.update() method is depracated.
+
+// DELETE:
+// db.coll.deleteOne( { filters } )
+// db.coll.deleteMany( { filters } )
+db.coll.deleteOne({ age: 19 });
+db.coll.deleteMany({ age: 19 });
+db.coll.deleteMany({
+    /* all */
+}); // Delete all documents.
+// db.coll.remove() method is depracated.
+
+// TODO *****************   LESSON 9 - *****************
+
+("use strict");
+/* -------------------------------------------------------
+    EXPRESSJS
+------------------------------------------------------- */
+/*
+ * npm init -y  // Bu dosyanın proje dosyası olduğunu tanıtırız. package.json'ı yükler
+ * npm i express dotenv  // node_modules'i yükleriz. Modul içerisinde hem express hem de dotenv moduü yüklü gelir.
+ */
+
+/* ExpressJS Start */
+const express = require("express"); // Express.js'i koda dahil eder ve onu express değişkenine atar. Bu sayede express.js özelliklerini kullanabiliriz. Express  modulünü express'e atarız.
+const app = express(); // Bu satır, Express.js uygulamasının bir örneğini oluşturur. express işlevini çağırarak bu app değişkeni, Express.js uygulamanızı temsil eder ve web uygulamanızın rotalarını, ara yazılımı (middleware) ve diğer ayarlarını yapılandırmanıza olanak tanır.
+
+/* ENV */ //.env dosyasını kullanarak çevresel değişkenleri yüklemek ve ardından bu değişkenleri kullanarak bir sunucu host adresi ve port numarası belirlemek için kullanılıyor
+require("dotenv").config(); // Bu satır, dotenv modülünü kullanarak çevresel değişkenleri .env dosyasından yükler. .env dosyası, uygulamanızın farklı ortamlarda çalışmasını sağlayan ve hassas bilgileri güvenli bir şekilde saklamaya yardımcı olan bir yapılandırma dosyasıdır.
+const HOST = process.env.HOST || "127.0.0.1"; //Bu satır, process.env.HOST değişkenini kontrol eder. Eğer bu değişken tanımlanmışsa, o değeri kullanır; aksi takdirde varsayılan olarak '127.0.0.1' (localhost) kullanır. Bu, sunucunun hangi IP adresi veya host adı üzerinden dinleyeceğini belirler.
+const PORT = process.env.PORT || 8000; // Bu kod satırı, bir web sunucusunun hangi port üzerinden dinleyeceğini belirlemek için kullanılır. const PORT = process.env.PORT || 8000: Bu satır, process.env.PORT değişkenini kontrol eder. Eğer bu değişken tanımlanmışsa (örneğin, çevresel değişkenler veya .env dosyası aracılığıyla ayarlanmışsa), o değeri PORT değişkenine atar. Eğer process.env.PORT tanımlı değilse veya boşsa, varsayılan olarak 8000 portunu kullanır.
+/* ------------------------------------------------------- */
+/* HTTP_Methods & URLs */
+
+app.get("/", (request, response) => {
+    // Kullanıcı '/' url'sine geldiğinde devamındaki req res callback fonksiyonu çalışacak.
+    //? run response.send for print-out:
+    // response.send( 'Welcome to Express' )
+    response.send({ message: "called in 'get' method." }); // response.send ile bir JSON veri gönderir. Çıktı alırız
+});
+app.post("/", (request, response) =>
+    response.send({ message: "called in 'post' method." })
+); // Post methoduyla işlem yapar
+app.put("/", (request, response) =>
+    response.send({ message: "called in 'put' method." })
+); // Put methoduyla işlem yapar
+app.delete("/", (request, response) =>
+    response.send({ message: "called in 'delete' method." })
+); // Delete methoduyla işlem yapar
+//? allow at all methods:
+app.all("/", (request, response) =>
+    response.send({ message: "'all' option allows to all methods." })
+); // Tüm methodlarla işlem yapar
+
+// ? app.route('url'): Önce url'yi kontrol eder sonra methodu kontrol eder. Yukarıda yazılan kodun kısa yazılmış halidir.
+app.route("/route") // URL sabit methodlar değişken. Bu sayede tek seferde bir URL'ye birden fazla method tanımlayabiliyoruz
+    .get((req, res) => res.send("get"))
+    .post((req, res) => res.send("post"))
+    .put((req, res) => res.send("put"))
+    .delete((req, res) => res.send("delete"));
+
+/* ------------------------------------------------------- */
+/* URL (Path) Options */
+
+app.get("/", (req, res) => res.send("in 'root' path")); // '/' == root
+app.get("/path", (req, res) => res.send("in 'path'")); // '/path' == '/path/' // Her iki yazım da aynıdır.
+//? express-urls supported JokerChar:
+app.get("/abc(x?)123", (req, res) => res.send("in 'abc(x?)123'")); // abc123 or abcx123  // url yazarken kullanılan parantezin hiçbir karşılığı yoktur. Parantezi yazılmamış gibi çalışır. // ? işareti kendisinden önce yazılan karakter olabilir de olmayabilir de anlamına gelir.
+app.get("/abc(x+)123", (req, res) => res.send("in 'abc(x+)123'")); // abcx123 or abcxx..xx123 // + işareti kendisinden önce karakter bir tane de olabilir birden fazla da olabilir anlamına gelir.
+app.get("/abc*123", (req, res) => res.send("in 'abc*123'")); // abc123 or abc...123 // abc(ANY)123 // * arada ne olursa olsun anlamına gelir.
+// ? express-urls supported regexp:
+app.get(/xyz/, (req, res) => res.send("regexp /xyz/")); // url contains = 'xyz' (no limit for subPaths)
+app.get(/^\/xyz/, (req, res) => res.send("regexp /^/xyz/")); // url startswith = 'xyz'  // ^ olursa xyz ile başlarsa anlamına gelir.
+app.get(/xyz$/, (req, res) => res.send("regexp /xyz$/")) / // url endswith = 'xyz'  // $ olursa xyz ile biterse anlamına gelir.
+    /* ------------------------------------------------------- */
+    /* URL Parameters (req.params) */
+
+    user /
+    66 /
+    config /
+    update /
+    any /
+    any /
+    any; // Eklediğimiz her / ile parçalara ayırıyoruz ve URL'nin aşağıdaki gibi okunmasını sağlıyoruz. Her /'den sonraki kısma path denir.
+// https://127.0.0.1:8000/user/77/config/insert/?key=value
+app.get("/user/:userId/config/:configParam/*", (req, res) => {
+    res.send({
+        userId: req.params.userId,
+        configParam: req.params.configParam,
+        url: {
+            protocol: req.protocol,
+            subdomains: req.subdomains,
+            hostname: req.hostname,
+            baseUrl: req.baseUrl,
+            params: req.params,
+            query: req.query,
+            path: req.path,
+            originalUrls: req.originalUrl,
+        },
+    });
+});
+/* ------------------------------------------------------- */
+
+//? '\d' means only-digit-chars in regexp: // Sadece bir rakam girilebilir. /d+/ olurs birden fazla rakam girilebilir.
+//? '\w' means only-chars in regexp:  // Sadece bir karakter girilebilir. /w+/ olursa birden fazla karakter girilebilir
+// app.get('/user/:userId([0-9]+)', (req, res) => { // Sadece rakamlardan oluşabilir.
+app.get("/user/:userId(\\d+)", (req, res) => {
+    res.send({
+        params: req.params,
+    });
+});
+
+app.get("/command/:userId-:profileId", (req, res) => {
+    res.send({
+        params: req.params,
+    });
+});
+
+/* ------------------------------------------------------- */
+
+/* Response Methods */
+
+// ? SendStatus:  // statusu ve send'i kolayce geönderir
+app.get("/", (req, res) => res.sendStatus(404));
+// ? Status: // Status code döndürür. send döndürür.
+app.get("/", (req, res) => res.status(200).send({ message: "OK" }));
+app.post("/", (req, res) => res.status(201).send({ message: "Created" }));
+app.put("/", (req, res) => res.status(202).send({ message: "Accepted" }));
+app.delete("/", (req, res) => res.status(204).send({ message: "No Content" }));
+// ? JSON (.send() method already does this converting.)
+app.get("/", (req, res) => res.json([{ key: "value" }]));
+// ? Download File (Download at browser): dosyayı indirilebilir yapma
+app.get("/download", (req, res) => res.download("./app.js", "changedName.js")); // /download'a girildiğinde ./app.js dosyasını "changedName.js" olarak indirir
+// ? SendFile Content:
+console.log(__dirname); // __dirname, içerisinde bulunduğum dosyanın fiziksel konumunu döndürür
+app.get("/file", (req, res) => res.sendFile(__dirname + "/app.js")); // FilePath must be realPath  //sendfile kullandığımızda dosyanın bizim bilgisayarımızdaki fiziksel yolunu vermemiz gerekir. Bu nedenle __dirname kullanılır.
+// ? Redirect: // status kodda 300 serisi redirect serisidir.
+app.get("/google", (req, res) => res.redirect(301, "https://www.google.com")); // 301 or 302  // /google yazıldığında 'https://www.google.com'a yönlendirir.
+app.get("/redirect", (req, res) => res.redirect(302, "/thisPath")); // 301 or 302
+
+/* ------------------------------------------------------- */
+// app.listen(PORT, () => console.log(`Running on http://127.0.0.1:${PORT}`))
+app.listen(PORT, HOST, () => console.log(`Running on http://${HOST}:${PORT}`)); // Bu kod satırı, Express.js uygulamanızı belirlediğiniz IP adresi ve port üzerinden dinlemeye başlatır ve uygulamanın hangi adres ve port üzerinden çalıştığını konsola yazdırır.
+
+// TODO *****************   LESSON 10 - Middleware  *****************
+
+("use strict");
+/* -------------------------------------------------------
+    EXPRESSJS - MIDDLEWARES
+------------------------------------------------------- */
+
+const express = require("express");
+const app = express();
+
+require("dotenv").config();
+const PORT = process.env.PORT || 8000;
+/* ------------------------------------------------------- *
+app.get('/', (req,res, next) =>{
+    req.customData = 'Custom Data With Request'
+    res.customDataWithResponse = 'Custom Data With Response'
+
+    next() // türü ne olursa olsun bir sonraki methoda yolluyor. Eğer next ile gidilecek başka method yoksa alttaki koddan çalışmaya devam eder
+
+    res.send({ // next() olduğu için buradaki kod çalışmayacak.
+        message: 'Birinci Middleware running'
+    }) // Block Command
+})
+
+app.get('/', (req,res,next)=>{
+    next() // Buradaki next res.send'den önce olduğu için doğrudan sonraki method'a gönderir. Kendisinden sonra gelen res.send hiç çalışmaz.
+    res.send({ // next() olduğu için buradaki kod çalışmayacak.
+        message: 'İkinci Middleware running'
+    }) // Block Command
+    next()  // Buradaki next hiçbir zaman çalışmaz. Çünkü res.send içerisinde end barındırır ve scope'ı bitirir.
+})
+
+
+app.get('/', (req, res) => {
+    res.send({
+        customData: [ 
+            req.customData,
+            res.customDataWithResponse
+        ],
+        message: 'Welcome to Home2'
+    })
+})
+
+/* ------------------------------------------------------- *
+
+const middleFunction1 = (req, res, next) => {
+    // const skip = req.query.skip ?? false;
+    req.customData = "Custom Data With Request";
+    res.customDataWithResponse = "Custom Data With Response";
+    next('route');
+};
+
+const middleFunction2 = (req, res, next) => {
+    req.name ="murat";
+    req.surname ="gümüş"
+    next('route')
+};
+
+app.get("/", [middleFunction1, middleFunction2], (req, res) => {
+    res.send({
+        customData: [
+            req.customData,
+            res.customDataWithResponse,
+            req.name,
+            req.surname
+        ],
+        message: "Welcome to Home",
+    });
+});
+/* ------------------------------------------------------- *
+
+const middleFunction1 = (req, res, next) => {
+    // console.log( req.query )
+    const skip = req.query.skip ?? false;
+
+    req.customData = "Custom Data With Request";
+    res.customDataWithResponse = "Custom Data With Response";
+
+    if (skip) {
+        // Bir sonraki bağımsız fonksiyona git:
+        console.log("next-route çalıştı");
+        req.result = "skip calisti";
+
+        next("route");
+    } else {
+        // Bir sonraki callback fonksiyona git:
+        console.log("next çalıştı");
+        req.result = "skip calismadi";
+
+        next();
+    }
+};
+
+const middleFunction2 = (req, res, next) => {
+    // next()
+
+    res.send({
+        customData: [req.customData, res.customDataWithResponse,req.result],
+        message: "Here is func2, next() runned",
+    });
+};
+app.use([middleFunction1, middleFunction2]);
+
+
+
+
+/* ------------------------------------------------------- */
+
+// const isAdmin = (req, res, next) => {
+//     const user = req.skip === "admin";
+
+//     if (user && user.role === "admin") {
+//         next();
+//     } else {
+//         next("route");
+//     }
+// };
+
+// app.use(isAdmin);
+// app.get("/", (req, res) => {
+//     res.send("Welcome!aa");
+// });
+
+// app.get("/", (req, res) => {
+//     res.status(403).send("Access denied");
+// });
+
+const isAdmin = (req, res, next) => {
+    const user = req.user;
+
+    if (user == 123) {
+        next("route");
+    } else {
+        res.status(403).send("Access denied");
+    }
+};
+app.use(isAdmin);
+app.get("/", (req, res) => {
+    res.send("Welcome!");
+});
+/* ------------------------------------------------------- */
+app.listen(PORT, () => console.log("Running: http://127.0.0.1:" + PORT));
 
 // TODO *****************   LESSON 11*****************
 
