@@ -102,7 +102,7 @@ app.use([middleFunction1, middleFunction2]);
 
 
 
-/* ------------------------------------------------------- */
+/* ------------------------------------------------------- *
 
 // const isAdmin = (req, res, next) => {
 //     const user = req.skip === "admin";
