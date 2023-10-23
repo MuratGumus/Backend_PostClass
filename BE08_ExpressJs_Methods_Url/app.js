@@ -61,30 +61,30 @@ app.get(/xyz$/, (req, res) => res.send("regexp /xyz$/")) / // url endswith = 'xy
     /* ------------------------------------------------------- */
     /* URL Parameters (req.params) */
 
-    user /
-    66 /
-    config /
-    update /
-    any /
-    any /
-    any; // Eklediğimiz her / ile parçalara ayırıyoruz ve URL'nin aşağıdaki gibi okunmasını sağlıyoruz. Her /'den sonraki kısma path denir.
-// https://127.0.0.1:8000/user/77/config/insert/?key=value
-app.get("/user/:userId/config/:configParam/*", (req, res) => {
-    res.send({
-        userId: req.params.userId,
-        configParam: req.params.configParam,
-        url: {
-            protocol: req.protocol,
-            subdomains: req.subdomains,
-            hostname: req.hostname,
-            baseUrl: req.baseUrl,
-            params: req.params,
-            query: req.query,
-            path: req.path,
-            originalUrls: req.originalUrl,
-        },
+    // user /
+    // 66 /
+    // config /
+    // update /
+    // any /
+    // any /
+    // any; // Eklediğimiz her / ile parçalara ayırıyoruz ve URL'nin aşağıdaki gibi okunmasını sağlıyoruz. Her /'den sonraki kısma path denir.
+    // https://127.0.0.1:8000/user/77/config/insert/?key=value
+    app.get("/user/:userId/config/:configParam/*", (req, res) => {
+        res.send({
+            userId: req.params.userId,
+            configParam: req.params.configParam,
+            url: {
+                protocol: req.protocol,
+                subdomains: req.subdomains,
+                hostname: req.hostname,
+                baseUrl: req.baseUrl,
+                params: req.params,
+                query: req.query,
+                path: req.path,
+                originalUrls: req.originalUrl,
+            },
+        });
     });
-});
 /* ------------------------------------------------------- */
 
 //? '\d' means only-digit-chars in regexp: // Sadece bir rakam girilebilir. /d+/ olurs birden fazla rakam girilebilir.
